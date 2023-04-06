@@ -1,6 +1,13 @@
+const base_controller = require("../base_controller.js");
 
-exports.index = function(req, res) {
-	res.render("index", {
-		layout: "template"
-	});
+class $ extends base_controller {
+
+	static index = async(req, res)=> {
+		res.render("index", {
+			layout: "template"
+		});
+	}
+
 }
+
+module.exports = $;

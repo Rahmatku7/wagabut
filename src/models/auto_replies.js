@@ -1,53 +1,59 @@
-const {db} = require("../configs/database.js");
-table      = 'auto_replies';
+const database = require("../configs/database.js");
 
-exports.findOne = async function(filters=[]) {
-	const qb = db(table);
-	filters.push(['whereRaw', `${table}.deleted_at is null`]);
-	filter = Object.assign([], [
-		['select', '*']
-	], filters);
+class $ extends database {
+	static table = 'auto_replies';
 
-	filter.forEach((v, k)=>{
-	    const params = Object.assign([], v);
-	    params.splice(0,1);
-	    qb[v[0]](...params);
-	})
-	return qb.first();
+	static findOne = async function(filters=[]) {
+		const qb = $.db(this.table);
+		filters.push(['whereRaw', `${this.table}.deleted_at is null`]);
+		const filter = Object.assign([], [
+			['select', '*']
+		], filters);
+
+		filter.forEach((v, k)=>{
+		    const params = Object.assign([], v);
+		    params.splice(0,1);
+		    qb[v[0]](...params);
+		})
+		return qb.first();
+	}
+
+	static findAll = async function(filters=[]) {
+		const qb = $.db(this.table);
+		filters.push(['whereRaw', `${this.table}.deleted_at is null`]);
+		const filter = Object.assign([], [
+			['select', '*']
+		], filters);
+
+		filter.forEach((v, k)=>{
+		    const params = Object.assign([], v);
+		    params.splice(0,1);
+		    qb[v[0]](...params);
+		})
+		return qb;
+	}
+
+	static insert = async function(data) {
+		data = Object.assign({}, {
+			created_at: new Date()
+		}, data);
+		$.db(this.table).insert(data).catch((err) => console.log(err));
+	}
+
+	static update = async function(id, data) {
+		data = Object.assign({}, {
+			updated_at: new Date()
+		}, data);
+		$.db(this.table).where({"id":id}).update(data).catch((err) => console.log(err));
+	}
+
+	static delete = async function(id, data) {
+		data = Object.assign({}, {
+			deleted_at: new Date()
+		}, data);
+		$.db(this.table).where({"id":id}).update(data).catch((err) => console.log(err));
+	}
+
 }
 
-exports.findAll = async function(filters=[]) {
-	const qb = db(table);
-	filters.push(['whereRaw', `${table}.deleted_at is null`]);
-	filter = Object.assign([], [
-		['select', '*']
-	], filters);
-
-	filter.forEach((v, k)=>{
-	    const params = Object.assign([], v);
-	    params.splice(0,1);
-	    qb[v[0]](...params);
-	})
-	return qb;
-}
-
-exports.insert = async function(data) {
-	data = Object.assign({}, {
-		created_at: new Date()
-	}, data);
-	db(table).insert(data).catch((err) => console.log(err));
-}
-
-exports.update = async function(id, data) {
-	data = Object.assign({}, {
-		updated_at: new Date()
-	}, data);
-	db(table).where({"id":id}).update(data).catch((err) => console.log(err));
-}
-
-exports.delete = async function(id, data) {
-	data = Object.assign({}, {
-		deleted_at: new Date()
-	}, data);
-	db(table).where({"id":id}).update(data).catch((err) => console.log(err));
-}
+module.exports = $;
