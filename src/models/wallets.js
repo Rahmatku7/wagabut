@@ -1,11 +1,11 @@
 const database = require("../configs/database.js");
 
 class $ extends database {
-	static table = 'wallets';
+	static table_name = 'wallets';
 
 	static findOne = async function(filters=[]) {
-		const qb = $.db(this.table);
-		filters.push(['whereRaw', `${this.table}.deleted_at is null`]);
+		const qb = $.table(this.table_name);
+		filters.push(['whereRaw', `${this.table_name}.deleted_at is null`]);
 		const filter = Object.assign([], [
 			['select', '*']
 		], filters);
@@ -19,8 +19,8 @@ class $ extends database {
 	}
 
 	static findAll = async function(filters=[]) {
-		const qb = $.db(this.table);
-		filters.push(['whereRaw', `${this.table}.deleted_at is null`]);
+		const qb = $.table(this.table_name);
+		filters.push(['whereRaw', `${this.table_name}.deleted_at is null`]);
 		const filter = Object.assign([], [
 			['select', '*']
 		], filters);
@@ -37,21 +37,21 @@ class $ extends database {
 		data = Object.assign({}, {
 			created_at: new Date()
 		}, data);
-		$.db(this.table).insert(data).catch((err) => console.log(err));
+		$.table(this.table_name).insert(data).catch((err) => console.log(err));
 	}
 
 	static update = async function(id, data) {
 		data = Object.assign({}, {
 			updated_at: new Date()
 		}, data);
-		$.db(this.table).where({"id":id}).update(data).catch((err) => console.log(err));
+		$.table(this.table_name).where({"id":id}).update(data).catch((err) => console.log(err));
 	}
 
 	static delete = async function(id, data) {
 		data = Object.assign({}, {
 			deleted_at: new Date()
 		}, data);
-		$.db(this.table).where({"id":id}).update(data).catch((err) => console.log(err));
+		$.table(this.table_name).where({"id":id}).update(data).catch((err) => console.log(err));
 	}
 
 }

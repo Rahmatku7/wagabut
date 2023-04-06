@@ -2,7 +2,9 @@ knex = require('knex');
 
 class database {
 
-  static db = knex({
+  static db = knex;
+
+  static table = this.db({
     client: 'mysql',
     connection: {
       host : '127.0.0.1',
